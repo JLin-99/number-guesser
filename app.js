@@ -17,23 +17,36 @@ guessBtn.addEventListener("click", function () {
 
   if (!guessValue || guessValue < min || guessValue > max) {
     setMessage(`Please enter a number between ${min} and ${max}`, "red")
+    return;
   }
 
   if (guessValue === winningNum) {
-    guessInput.disabled = true;
-    guessInput.style.borderColor = "green";
-    setMessage(`Congratulations! ${winningNum} is correct, YOU WIN!`, "green");
+    gameOver("win", `${winningNum} is correct, YOU WIN 😎!`)
   } else {
-
+    // Player gets a certain amount of guesses
+    --guessesLeft;
+    if (!guessesLeft) {
+      gameOver("lose", `YOU LOST 😔 The correct number was ${winningNum}`)
+    } else {
+      guessInput.style.borderColor = "red";
+      guessInput.value = "";
+      setMessage(`${guessValue} is not correct, ${guessesLeft} guesses left`);
+    }
   }
 });
+
+function gameOver(result, msg) {
+  const color = result === "win" ? "green" : "red";
+
+  guessInput.disabled = true;
+  guessInput.style.borderColor = color;
+  setMessage(msg, color);
+}
 
 function setMessage(msg, color) {
   message.style.color = color;
   message.textContent = msg;
 }
-
-// Player gets a certain amount of guesses
 
 // Notify player of guesses remaining
 
