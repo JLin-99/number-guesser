@@ -1,17 +1,19 @@
 // Player must guess a number between a min and max
-const min = 1, max = 10;
+const min = 1, max = 10, totalGuesses = 3;
 game = document.getElementById("game"),
   minNum = document.querySelector(".min-num"),
   maxNum = document.querySelector(".max-num"),
+  lives = document.querySelector(".lives"),
   guessBtn = document.getElementById("guess-btn"),
   guessInput = document.getElementById("guess-input"),
   message = document.querySelector(".message");
 
 let winningNum = Math.floor(Math.random() * (max - min + 1)) + min,
-  guessesLeft = 3, guessValue;
+  guessesLeft = totalGuesses, guessValue;
 
 minNum.textContent = min;
 maxNum.textContent = max;
+lives.textContent = "❤️".repeat(totalGuesses);
 
 game.addEventListener("mousedown", function (e) {
   if (e.target.className === "play-again") {
@@ -23,25 +25,27 @@ guessBtn.addEventListener("click", function () {
   guessValue = parseInt(guessInput.value);
 
   if (!guessValue || guessValue < min || guessValue > max) {
-    setMessage(`Please enter a number between ${min} and ${max}`, "red")
+    setMessage(`Please enter a number between ${min} and ${max}`, "red");
     return;
   }
 
   if (guessValue === winningNum) {
     // Notify the player if win
-    gameOver("win", `${winningNum} is correct, YOU WIN 😎!`)
+    gameOver("win", `${winningNum} is correct, YOU WIN 😎!`);
   } else {
     // Player gets a certain amount of guesses
     --guessesLeft;
     if (!guessesLeft) {
       // Notify the player of the correct answer if lose
-      gameOver("lose", `YOU LOST 😔 The correct number was ${winningNum}`)
+      gameOver("lose", `YOU LOST 😔 The correct number was ${winningNum}`);
     } else {
       // Notify player of guesses remaining
       guessInput.style.borderColor = "red";
       guessInput.value = "";
-      setMessage(`${guessValue} is not correct, ${guessesLeft} guesses left`);
+      setMessage(`${guessValue} is not correct`);
+
     }
+    lives.textContent = "❤️".repeat(guessesLeft) + "🤍".repeat(totalGuesses - guessesLeft);
   }
 });
 
